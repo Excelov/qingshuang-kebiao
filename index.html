@@ -139,15 +139,16 @@
 
   /* ---- 中：课表主区 ---- */
   .stage{flex:1;min-width:0;display:flex;flex-direction:column;gap:14px}
-  .stage-card{padding:14px 16px 16px}
+  .stage-card{padding:0;overflow:hidden}
   .schedule-palette{display:none}
 
   /* ---- 右：课程定义 ---- */
   .defs-panel{width:270px;flex:0 0 270px;display:flex;flex-direction:column;gap:14px;position:sticky;top:14px}
-  .sched-head{text-align:center;background:var(--header-bg);color:var(--header-text);border:1px solid var(--header-bg);border-bottom:none;border-radius:var(--radius) var(--radius) 0 0;padding:15px 26px 13px;transition:background .35s,color .35s}
-  .sched-title{font-family:"STKaiti","KaiTi","Songti SC","SimSun",serif;font-size:32px;font-weight:700;letter-spacing:.18em;color:var(--header-text);text-indent:.18em}
-  .sched-sub{display:flex;justify-content:space-between;font-size:14px;margin-top:10px;padding-top:9px;border-top:1px solid rgba(255,255,255,.24);color:var(--header-text);font-weight:500}
-  .sub-term,.sub-class{color:var(--header-text);opacity:.94}
+  .sched-head{text-align:center;background:var(--brand-soft);color:var(--text);border:0;border-top:3px solid var(--brand);border-radius:0;padding:15px 26px 13px;transition:background .35s,color .35s}
+  .sched-title{font-family:"STKaiti","KaiTi","Songti SC","SimSun",serif;font-size:32px;font-weight:700;letter-spacing:.18em;color:var(--text);text-indent:.18em}
+  .sched-sub{display:flex;justify-content:space-between;font-size:14px;margin-top:10px;padding-top:9px;border-top:1px solid var(--line);color:var(--muted);font-weight:500}
+  .sub-term{color:var(--muted)}
+  .sub-class{color:var(--brand);font-weight:600}
   .sub-term{text-align:left}
   .sub-class{text-align:right}
   .sched-scroll{border-radius:0 0 var(--radius) var(--radius);overflow:auto;border:1px solid var(--line);border-top:none;background:var(--card);box-shadow:0 4px 18px rgba(20,30,60,.07)}
@@ -155,12 +156,12 @@
   table.sched th,table.sched td{border:none;border-right:1px solid var(--line);border-bottom:1px solid var(--line);text-align:center;vertical-align:middle;transition:background .35s,color .35s,border-color .35s}
   table.sched th:last-child,table.sched td:last-child{border-right:none}
   table.sched thead th{
-    background:var(--header-bg);color:var(--header-text);font-weight:600;font-size:13px;padding:12px 6px;
+    background:var(--brand-soft);color:var(--brand);font-weight:600;font-size:13px;padding:12px 6px;
   }
   table.sched thead th.gutter{width:108px;font-size:12px}
-  .gutter{background:var(--header-bg);width:108px;transition:background .35s}
-  .gutter .pinfo{font-size:12px;color:var(--header-text);font-weight:500}
-  .gutter .ptime{font-size:12px;color:var(--header-text);margin-top:2px;font-variant-numeric:tabular-nums;opacity:.95}
+  .gutter{background:var(--brand-soft);width:108px;transition:background .35s}
+  .gutter .pinfo{font-size:12px;color:var(--text);font-weight:500}
+  .gutter .ptime{font-size:12px;color:var(--muted);margin-top:2px;font-variant-numeric:tabular-nums}
   table.sched tbody tr:nth-child(odd) td:not(.gutter){background:var(--row-odd)}
   table.sched tbody tr:nth-child(even) td:not(.gutter){background:var(--row-even)}
   table.sched tbody tr:hover td:not(.gutter){background:var(--row-hover)}
@@ -189,12 +190,12 @@
     .controls{display:none !important}
     .stage{gap:0}
     .stage-card{border:none;box-shadow:none;padding:0}
-    .sched-head{background:var(--header-bg) !important;color:var(--header-text);border:1px solid var(--header-bg);border-bottom:none;-webkit-print-color-adjust:exact;print-color-adjust:exact}
-    .sched-title{font-size:26px;color:var(--header-text)}
-    .sched-sub{font-size:15px;color:var(--header-text);border-top-color:rgba(255,255,255,.24)}
+    .sched-head{background:var(--brand-soft) !important;color:var(--text);border-top-color:var(--brand);-webkit-print-color-adjust:exact;print-color-adjust:exact}
+    .sched-title{font-size:26px;color:var(--text)}
+    .sched-sub{font-size:15px;color:var(--muted);border-top-color:var(--line)}
     .sched-scroll{box-shadow:none}
     .cell.empty .ph{display:none}
-    .gutter{background:var(--header-bg) !important;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+    .gutter{background:var(--brand-soft) !important;-webkit-print-color-adjust:exact;print-color-adjust:exact}
     table.sched tbody tr:nth-child(odd) td:not(.gutter){background:var(--row-odd) !important;-webkit-print-color-adjust:exact;print-color-adjust:exact}
     table.sched tbody tr:nth-child(even) td:not(.gutter){background:var(--row-even) !important;-webkit-print-color-adjust:exact;print-color-adjust:exact}
     .cell .cname{-webkit-print-color-adjust:exact;print-color-adjust:exact}
@@ -226,8 +227,8 @@
     .layout>.mobile-panel.mobile-active{display:flex}
     .controls,.defs-panel{gap:10px}
     .card{border-radius:13px;padding:14px}
-    .stage-card{padding:8px 8px 10px}
-    .schedule-palette{display:block;margin:0 0 8px;padding:4px 2px 0}
+    .stage-card{padding:0}
+    .schedule-palette{display:block;margin:0;padding:10px 10px 4px}
     .palette-head{display:flex;align-items:center;justify-content:space-between;gap:8px;margin:0 2px 6px;font-size:12px;color:var(--muted)}
     .palette-head b{font-size:13px;color:var(--text);font-weight:600}
     .palette-current{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
