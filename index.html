@@ -144,9 +144,10 @@
 
   /* ---- 右：课程定义 ---- */
   .defs-panel{width:270px;flex:0 0 270px;display:flex;flex-direction:column;gap:14px;position:sticky;top:14px}
-  .sched-head{text-align:center;background:var(--card);color:var(--text);border:1px solid var(--line);border-bottom:none;border-radius:var(--radius) var(--radius) 0 0;padding:15px 26px 12px;transition:background .35s,color .35s}
-  .sched-title{font-size:34px;font-weight:700;letter-spacing:.22em;color:#1f2937;text-indent:.22em}
-  .sched-sub{display:flex;justify-content:space-between;font-size:17px;margin-top:10px;color:#1f2937;font-weight:600}
+  .sched-head{text-align:center;background:var(--header-bg);color:var(--header-text);border:1px solid var(--header-bg);border-bottom:none;border-radius:var(--radius) var(--radius) 0 0;padding:15px 26px 13px;transition:background .35s,color .35s}
+  .sched-title{font-family:"STKaiti","KaiTi","Songti SC","SimSun",serif;font-size:32px;font-weight:700;letter-spacing:.18em;color:var(--header-text);text-indent:.18em}
+  .sched-sub{display:flex;justify-content:space-between;font-size:14px;margin-top:10px;padding-top:9px;border-top:1px solid rgba(255,255,255,.24);color:var(--header-text);font-weight:500}
+  .sub-term,.sub-class{color:var(--header-text);opacity:.94}
   .sub-term{text-align:left}
   .sub-class{text-align:right}
   .sched-scroll{border-radius:0 0 var(--radius) var(--radius);overflow:auto;border:1px solid var(--line);border-top:none;background:var(--card);box-shadow:0 4px 18px rgba(20,30,60,.07)}
@@ -188,9 +189,9 @@
     .controls{display:none !important}
     .stage{gap:0}
     .stage-card{border:none;box-shadow:none;padding:0}
-    .sched-head{background:#fff !important;border:1px solid #e3e5ea;border-bottom:none;-webkit-print-color-adjust:exact;print-color-adjust:exact}
-    .sched-title{font-size:26px;color:#1f2937}
-    .sched-sub{font-size:15px;color:#1f2937}
+    .sched-head{background:var(--header-bg) !important;color:var(--header-text);border:1px solid var(--header-bg);border-bottom:none;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+    .sched-title{font-size:26px;color:var(--header-text)}
+    .sched-sub{font-size:15px;color:var(--header-text);border-top-color:rgba(255,255,255,.24)}
     .sched-scroll{box-shadow:none}
     .cell.empty .ph{display:none}
     .gutter{background:var(--header-bg) !important;-webkit-print-color-adjust:exact;print-color-adjust:exact}
@@ -234,7 +235,7 @@
     .fill-select:focus{border-color:var(--brand)}
     .sched-head{padding:12px 13px 10px}
     .sched-title{font-size:27px}
-    .sched-sub{font-size:13px;margin-top:7px;gap:2px;flex-direction:column}
+    .sched-sub{font-size:13px;margin-top:7px;padding-top:7px;gap:2px;flex-direction:column}
     .sub-class{text-align:left}
     .sched-scroll{overflow:auto}
     table.sched{min-width:600px}
