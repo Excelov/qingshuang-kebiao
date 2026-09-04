@@ -140,6 +140,7 @@
   /* ---- 中：课表主区 ---- */
   .stage{flex:1;min-width:0;display:flex;flex-direction:column;gap:14px}
   .stage-card{padding:14px 16px 16px}
+  .schedule-palette{display:none}
 
   /* ---- 右：课程定义 ---- */
   .defs-panel{width:270px;flex:0 0 270px;display:flex;flex-direction:column;gap:14px;position:sticky;top:14px}
@@ -225,6 +226,12 @@
     .controls,.defs-panel{gap:10px}
     .card{border-radius:13px;padding:14px}
     .stage-card{padding:8px 8px 10px}
+    .schedule-palette{display:block;margin:0 0 8px;padding:4px 2px 0}
+    .palette-head{display:flex;align-items:center;justify-content:space-between;gap:8px;margin:0 2px 6px;font-size:12px;color:var(--muted)}
+    .palette-head b{font-size:13px;color:var(--text);font-weight:600}
+    .palette-current{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+    .fill-select{width:100%;border:1px solid var(--line);border-radius:9px;background:var(--card);color:var(--text);padding:8px 10px;font-size:13px;font-family:inherit;outline:none}
+    .fill-select:focus{border-color:var(--brand)}
     .sched-head{padding:12px 13px 10px}
     .sched-title{font-size:27px}
     .sched-sub{font-size:13px;margin-top:7px;gap:2px;flex-direction:column}
@@ -299,6 +306,10 @@
     <!-- 中：课表主区 -->
     <main class="stage mobile-panel mobile-active" id="panel-schedule">
       <div class="card stage-card">
+        <div class="schedule-palette" id="schedulePalette" aria-label="快速填课">
+          <div class="palette-head"><b>填入课程</b><span class="palette-current" id="paletteCurrent">选择后点击格子</span></div>
+          <select class="fill-select" id="fillCourseSelect" aria-label="选择要填入的课程"></select>
+        </div>
         <div id="schedHead"></div>
         <div class="sched-scroll"><div id="schedHost"></div></div>
       </div>
@@ -440,6 +451,8 @@
   var schedHead=document.getElementById('schedHead');
   var schemesEl=document.getElementById('schemes');
   var dayRangeEl=document.getElementById('dayRange');
+  var fillCourseSelectEl=document.getElementById('fillCourseSelect');
+  var paletteCurrentEl=document.getElementById('paletteCurrent');
   var showTimeToggle=document.getElementById('showTimeToggle');
   var showTimeState=document.getElementById('showTimeState');
   var toastEl=document.getElementById('toast');
@@ -494,12 +507,24 @@
     html+='<button class="addbtn" id="addCourse">＋ 课程</button>';
     defsEl.innerHTML=html;
   }
+  function renderPalette(){
+    var current=brush==='__erase__'?'当前：擦除模式':brush?(function(){var c=state.courses.find(function(x){return x.id===brush;});return '当前：'+(c?c.name:'课程');})():'选择后点击格子';
+    paletteCurrentEl.textContent=current;
+    var html='<option value="">选择课程</option>';
+    state.courses.forEach(function(c){
+      html+='<option value="'+c.id+'">'+esc(c.name)+'</option>';
+    });
+    html+='<option value="__erase__">✕ 清除单元格</option>';
+    fillCourseSelectEl.innerHTML=html;
+    fillCourseSelectEl.value=brush||'';
+  }
   function setBrush(id){
     brush=(brush===id)?null:id;
     var chips=defsEl.querySelectorAll('.chip');
     for(var i=0;i<chips.length;i++){
       chips[i].classList.toggle('on',chips[i].dataset.id===brush);
     }
+    renderPalette();
   }
   function renderSched(){
     var rows=buildRows();
@@ -530,7 +555,7 @@
     html+='</tbody></table>';
     schedEl.innerHTML=html;
   }
-  function renderAll(){ applyTheme(); renderHead(); renderSchemes(); renderSetup(); renderDefs(); renderSched(); }
+  function renderAll(){ applyTheme(); renderHead(); renderSchemes(); renderSetup(); renderDefs(); renderPalette(); renderSched(); }
 
   function pruneGrid(session,newCount){
     buildRows().forEach(function(r){
@@ -595,24 +620,29 @@
   defsEl.addEventListener('input',function(e){
     if(e.target.classList.contains('cname')){
       var c=state.courses.find(function(x){return x.id===e.target.dataset.id;});
-      if(c){ c.name=e.target.value; save(); renderSched(); }
+      if(c){ c.name=e.target.value; save(); renderPalette(); renderSched(); }
     } else if(e.target.classList.contains('ccolor')){
       var c2=state.courses.find(function(x){return x.id===e.target.dataset.color;});
-      if(c2){ c2.color=e.target.value; save(); e.target.parentNode.querySelector('.dot').style.background=e.target.value; renderSched(); }
+      if(c2){ c2.color=e.target.value; save(); e.target.parentNode.querySelector('.dot').style.background=e.target.value; renderPalette(); renderSched(); }
     }
   });
   defsEl.addEventListener('click',function(e){
     if(e.target.id==='addCourse'){
       var id='c'+Date.now();
       state.courses.push({id:id,name:'新课'}); brush=id; save(); renderDefs();
+      renderPalette();
       var inp=defsEl.querySelector('.cname[data-id="'+id+'"]'); if(inp) inp.focus();
     }
   });
   function removeCourse(id){
     state.courses=state.courses.filter(function(c){return c.id!==id;});
     Object.keys(state.grid).forEach(function(k){ if(state.grid[k]===id) delete state.grid[k]; });
-    if(brush===id) brush=null; save(); renderDefs(); renderSched();
+    if(brush===id) brush=null; save(); renderDefs(); renderPalette(); renderSched();
   }
+
+  fillCourseSelectEl.addEventListener('change',function(){
+    setBrush(fillCourseSelectEl.value||null);
+  });
 
   schedEl.addEventListener('click',function(e){
     var td=e.target.closest('.cell'); if(!td) return;
