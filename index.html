@@ -36,6 +36,7 @@
   .brand-bar .logo .accent{color:var(--brand)}
   .brand-bar .slogan{font-size:13px;color:var(--muted)}
   .layout{display:flex;gap:14px;align-items:flex-start}
+  .mobile-tabs{display:none}
 
   /* ---- 左：控制面板 ---- */
   .controls{width:290px;flex:0 0 290px;display:flex;flex-direction:column;gap:14px;position:sticky;top:14px}
@@ -85,6 +86,11 @@
   }
   .field input[type=time]{width:96px}
   .field input:focus{border-color:var(--brand)}
+  .day-range{display:flex;align-items:center;gap:7px;flex-wrap:wrap;margin-top:14px;padding-top:12px;border-top:1px solid var(--line2)}
+  .day-range .lab{font-size:12px;color:var(--muted);margin-right:2px}
+  .day-range button{border:1px solid var(--line);background:#fff;color:#5b6070;border-radius:999px;padding:6px 10px;font-size:12px;cursor:pointer;font-family:inherit}
+  .day-range button:hover{border-color:var(--brand);color:var(--brand)}
+  .day-range button.on{border-color:var(--brand);background:var(--brand-soft);color:var(--brand);font-weight:600}
 
   .steppers{display:flex;gap:12px;flex-wrap:wrap;margin-top:14px}
   .stepper{display:flex;align-items:center;gap:10px;background:var(--soft);border:1px solid var(--line2);border-radius:11px;padding:8px 12px}
@@ -117,6 +123,9 @@
   .chip.on{border-color:var(--brand);box-shadow:0 0 0 2px var(--brand-soft);background:var(--brand-soft);color:var(--brand);font-weight:600}
   .chip.on .cname{color:var(--brand);font-weight:600}
   .chip .dot{width:11px;height:11px;border-radius:50%;flex:none}
+  .chip .ccolor{width:19px;height:19px;border:0;border-radius:50%;padding:0;background:transparent;cursor:pointer;flex:none}
+  .chip .ccolor::-webkit-color-swatch-wrapper{padding:0}
+  .chip .ccolor::-webkit-color-swatch{border:1px solid rgba(0,0,0,.12);border-radius:50%}
   .chip .cname{border:none;outline:none;background:transparent;font-size:13px;color:var(--text);font-family:inherit;width:auto;min-width:24px;padding:0;max-width:90px;pointer-events:none}
   .chip .del{color:#c2c6cf;font-size:12px;margin-left:1px;padding:0 2px}
   .chip .del:hover{color:#e0605c}
@@ -187,7 +196,49 @@
     table.sched tbody tr:nth-child(odd) td:not(.gutter){background:var(--row-odd) !important;-webkit-print-color-adjust:exact;print-color-adjust:exact}
     table.sched tbody tr:nth-child(even) td:not(.gutter){background:var(--row-even) !important;-webkit-print-color-adjust:exact;print-color-adjust:exact}
     .cell .cname{-webkit-print-color-adjust:exact;print-color-adjust:exact}
+    .mobile-tabs{display:none !important}
+    .layout>.controls{display:none !important}
+    .layout>.defs-panel{display:none !important}
+    .layout>.stage{display:block !important}
+    .wrap{max-width:none;width:100%}
+    .stage{width:100%}
+    .sched-scroll{overflow:visible}
+    table.sched{min-width:0;width:100%}
+    table.sched thead th.gutter,.gutter{width:92px}
+    .cell{height:48px;padding:6px 4px}
+    .cell .cname{font-size:12px}
+    .breakcell{padding:5px 4px}
+    @page{size:A4 landscape;margin:8mm}
   }
+
+  @media (max-width:700px){
+    body{padding:10px 8px 30px}
+    .brand-bar{padding:2px 2px 9px;gap:8px}
+    .brand-bar .logo{font-size:20px}
+    .brand-bar .slogan{font-size:12px}
+    .mobile-tabs{display:flex;position:sticky;top:0;z-index:10;gap:5px;padding:5px;background:var(--bg);border-bottom:1px solid var(--line);margin:0 -8px 10px}
+    .mobile-tabs button{flex:1;border:1px solid var(--line);background:var(--card);color:var(--muted);border-radius:9px;padding:8px 4px;font-size:13px;font-family:inherit;cursor:pointer}
+    .mobile-tabs button.on{background:var(--brand);border-color:var(--brand);color:#fff;font-weight:600}
+    .layout{display:block}
+    .layout>.mobile-panel{display:none}
+    .layout>.mobile-panel.mobile-active{display:flex}
+    .controls,.defs-panel{gap:10px}
+    .card{border-radius:13px;padding:14px}
+    .stage-card{padding:8px 8px 10px}
+    .sched-head{padding:12px 13px 10px}
+    .sched-title{font-size:27px}
+    .sched-sub{font-size:13px;margin-top:7px;gap:2px;flex-direction:column}
+    .sub-class{text-align:left}
+    .sched-scroll{overflow:auto}
+    table.sched{min-width:600px}
+    .defs-row{gap:7px}
+    .hint{margin-top:10px}
+    .toolbar .btn{padding:7px 12px}
+  }
+
+  #toast{position:fixed;left:50%;bottom:22px;z-index:30;transform:translate(-50%,12px);background:rgba(35,39,48,.92);color:#fff;border-radius:999px;padding:8px 14px;font-size:13px;opacity:0;pointer-events:none;transition:opacity .18s,transform .18s}
+  #toast.show{opacity:1;transform:translate(-50%,0)}
+  @media print{#toast{display:none !important}}
 </style>
 </head>
 <body>
@@ -196,10 +247,15 @@
     <div class="logo">轻爽<span class="accent">课表</span></div>
     <div class="slogan">单文件课表生成器 · 点选即填 · 中国古典配色</div>
   </header>
+  <nav class="mobile-tabs" id="mobileTabs" aria-label="页面分段">
+    <button type="button" data-panel="panel-schedule" class="on">课表</button>
+    <button type="button" data-panel="panel-controls">编辑</button>
+    <button type="button" data-panel="panel-courses">课程库</button>
+  </nav>
   <div class="layout">
 
     <!-- 左：控制面板 -->
-    <aside class="controls">
+    <aside class="controls mobile-panel" id="panel-controls">
       <div class="card">
         <h2>班级 / 学期</h2>
         <input id="nameInput" class="name-input" placeholder="班级，如：三年级13班" />
@@ -221,6 +277,12 @@
           <div class="field"><label>午休(分)</label><input type="number" data-tk="lunch" min="0" max="240" value="130" /></div>
           <div class="field"><label>晚休(分)</label><input type="number" data-tk="dinner" min="0" max="180" value="60" /></div>
         </div>
+        <div class="day-range" id="dayRange">
+          <span class="lab">显示星期</span>
+          <button type="button" data-days="5">周一至周五</button>
+          <button type="button" data-days="6">周一至周六</button>
+          <button type="button" data-days="7">周一至周日</button>
+        </div>
         <div class="toggle-row">
           <span id="showTimeState">显示时间</span>
           <div class="toggle on" id="showTimeToggle"></div>
@@ -235,7 +297,7 @@
     </aside>
 
     <!-- 中：课表主区 -->
-    <main class="stage">
+    <main class="stage mobile-panel mobile-active" id="panel-schedule">
       <div class="card stage-card">
         <div id="schedHead"></div>
         <div class="sched-scroll"><div id="schedHost"></div></div>
@@ -243,7 +305,7 @@
     </main>
 
     <!-- 右：课程定义 -->
-    <aside class="defs-panel">
+    <aside class="defs-panel mobile-panel" id="panel-courses">
       <div class="card defs">
         <h2>课程定义 · 点选后在课表格中点击填入</h2>
         <div class="defs-row" id="defsRow"></div>
@@ -253,11 +315,12 @@
 
   </div>
 </div>
+<div id="toast" role="status" aria-live="polite"></div>
 
 <script>
 (function(){
   "use strict";
-  var DAYS=['周一','周二','周三','周四','周五'];
+  var DAYS=['周一','周二','周三','周四','周五','周六','周日'];
   var KEY='jjkb-schedule-maker-v1';
 
   // —— 中国古典配色方案 ——
@@ -312,6 +375,9 @@
     for(var i=0;i<name.length;i++){ h=(h*31+name.charCodeAt(i))>>>0; }
     return SCHEMES[state.scheme].palette[h%8];
   }
+  function courseColor(course){
+    return /^#[0-9a-f]{6}$/i.test(course.color||'') ? course.color : colorFor(course.name);
+  }
   function esc(s){ return String(s).replace(/[&<>"]/g,function(m){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[m];}); }
   function toMin(h){ var p=String(h).split(':'); return (parseInt(p[0],10)||0)*60+(parseInt(p[1],10)||0); }
   function fmt(m){ m=((m%1440)+1440)%1440; var h=Math.floor(m/60), mm=m%60; return (h<10?'0':'')+h+':'+(mm<10?'0':'')+mm; }
@@ -320,6 +386,7 @@
     name:'三年级13班',
     term:'2026–2027学年第一学期',
     scheme:'xinzheng',
+    days:5,
     time:{morningStart:'08:00',period:45,brk:10,lunch:130,dinner:60,showTime:true},
     counts:{morning:4,afternoon:3,evening:0},
     courses:[
@@ -342,6 +409,7 @@
   try{ var raw=localStorage.getItem(KEY); state = raw? JSON.parse(raw):null; }catch(e){ state=null; }
   if(!state||!state.courses){ state=JSON.parse(JSON.stringify(DEFAULT)); }
   if(!state.scheme||!SCHEMES[state.scheme]){ state.scheme=DEFAULT.scheme; }
+  if(![5,6,7].includes(Number(state.days))){ state.days=5; }
   if(state.time && state.time.showTime===undefined){ state.time.showTime=true; }
   function save(){ try{ localStorage.setItem(KEY, JSON.stringify(state)); }catch(e){} }
 
@@ -371,8 +439,15 @@
   var schedEl=document.getElementById('schedHost');
   var schedHead=document.getElementById('schedHead');
   var schemesEl=document.getElementById('schemes');
+  var dayRangeEl=document.getElementById('dayRange');
   var showTimeToggle=document.getElementById('showTimeToggle');
   var showTimeState=document.getElementById('showTimeState');
+  var toastEl=document.getElementById('toast');
+  var toastTimer;
+  function showToast(msg){
+    toastEl.textContent=msg; toastEl.classList.add('show');
+    clearTimeout(toastTimer); toastTimer=setTimeout(function(){toastEl.classList.remove('show');},1600);
+  }
 
   function applyTheme(){
     var s=SCHEMES[state.scheme], r=document.documentElement.style;
@@ -402,16 +477,18 @@
     document.getElementById('n-morning').textContent=state.counts.morning;
     document.getElementById('n-afternoon').textContent=state.counts.afternoon;
     document.getElementById('n-evening').textContent=state.counts.evening;
+    dayRangeEl.querySelectorAll('[data-days]').forEach(function(btn){ btn.classList.toggle('on',Number(btn.dataset.days)===Number(state.days)); });
     showTimeToggle.classList.toggle('on', !!state.time.showTime);
     showTimeState.textContent = state.time.showTime ? '显示时间' : '隐藏时间';
   }
   function renderDefs(){
     var html='<div class="chip erase '+(brush==='__erase__'?'on':'')+'" data-id="__erase__" title="选中后点击格子可擦除">✕ 清除</div>';
     state.courses.forEach(function(c){
-      var fg=colorFor(c.name);
+      var fg=courseColor(c);
       html+='<div class="chip '+(brush===c.id?'on':'')+'" data-id="'+c.id+'" title="单击选中，双击改名">'
         +'<span class="dot" style="background:'+fg+'"></span>'
         +'<input class="cname" data-id="'+c.id+'" value="'+esc(c.name)+'">'
+        +'<input class="ccolor" data-color="'+c.id+'" type="color" value="'+fg+'" title="自定义课程颜色" aria-label="自定义'+esc(c.name)+'颜色">'
         +'<span class="del" data-del="'+c.id+'" title="删除该课程">✕</span></div>';
     });
     html+='<button class="addbtn" id="addCourse">＋ 课程</button>';
@@ -427,20 +504,21 @@
   function renderSched(){
     var rows=buildRows();
     var showTime=!!state.time.showTime;
+    var activeDays=DAYS.slice(0,Number(state.days)||5);
     var html='<table class="sched"><thead><tr><th class="gutter">'+(showTime?'节次 / 时间':'节次')+'</th>';
-    DAYS.forEach(function(d){ html+='<th>'+d+'</th>'; });
+    activeDays.forEach(function(d){ html+='<th>'+d+'</th>'; });
     html+='</tr></thead><tbody>';
     rows.forEach(function(r){
       if(r.type==='break'){
-        html+='<tr class="breakrow"><td colspan="'+(DAYS.length+1)+'" class="breakcell"><b>'+r.label+'</b>'+(showTime?' · '+fmt(r.s)+'–'+fmt(r.e):'')+'</td></tr>';
+        html+='<tr class="breakrow"><td colspan="'+(activeDays.length+1)+'" class="breakcell"><b>'+r.label+'</b>'+(showTime?' · '+fmt(r.s)+'–'+fmt(r.e):'')+'</td></tr>';
       } else {
         html+='<tr><td class="gutter"><div class="pinfo">'+r.session+' 第'+r.n+'节</div>'+(showTime?'<div class="ptime">'+fmt(r.s)+'–'+fmt(r.e)+'</div>':'')+'</td>';
-        for(var di=0; di<DAYS.length; di++){
+        for(var di=0; di<activeDays.length; di++){
           var key=r.pIdx+'-'+di;
           var cid=state.grid[key];
           var course=cid?state.courses.find(function(x){return x.id===cid;})||null:null;
           if(course){
-            var fg=colorFor(course.name);
+            var fg=courseColor(course);
             html+='<td class="cell" data-p="'+r.pIdx+'" data-d="'+di+'"><div class="cname" style="color:'+fg+'">'+esc(course.name)+'</div></td>';
           } else {
             html+='<td class="cell empty" data-p="'+r.pIdx+'" data-d="'+di+'"><div class="ph">＋</div></td>';
@@ -484,6 +562,12 @@
     save(); renderSetup(); renderSched();
   });
 
+  dayRangeEl.addEventListener('click',function(e){
+    var b=e.target.closest('[data-days]'); if(!b) return;
+    state.days=Number(b.dataset.days); save(); renderSetup(); renderSched();
+    showToast('已显示'+b.textContent);
+  });
+
   schemesEl.addEventListener('click',function(e){
     var b=e.target.closest('.scheme-sw'); if(!b) return;
     state.scheme=b.dataset.id; save(); renderAll();
@@ -512,6 +596,9 @@
     if(e.target.classList.contains('cname')){
       var c=state.courses.find(function(x){return x.id===e.target.dataset.id;});
       if(c){ c.name=e.target.value; save(); renderSched(); }
+    } else if(e.target.classList.contains('ccolor')){
+      var c2=state.courses.find(function(x){return x.id===e.target.dataset.color;});
+      if(c2){ c2.color=e.target.value; save(); e.target.parentNode.querySelector('.dot').style.background=e.target.value; renderSched(); }
     }
   });
   defsEl.addEventListener('click',function(e){
@@ -530,15 +617,22 @@
   schedEl.addEventListener('click',function(e){
     var td=e.target.closest('.cell'); if(!td) return;
     var key=td.dataset.p+'-'+td.dataset.d;
-    if(brush==='__erase__'){ delete state.grid[key]; }
-    else if(brush){ state.grid[key]=brush; }
-    else if(state.grid[key]){ delete state.grid[key]; }
-    save(); renderSched();
+    var msg='';
+    if(brush==='__erase__'){ delete state.grid[key]; msg='已清除'; }
+    else if(brush){ state.grid[key]=brush; var picked=state.courses.find(function(x){return x.id===brush;}); msg='已填入：'+(picked?picked.name:'课程'); }
+    else if(state.grid[key]){ delete state.grid[key]; msg='已清除'; }
+    save(); renderSched(); if(msg) showToast(msg);
   });
 
   document.getElementById('printBtn').addEventListener('click',function(){ window.print(); });
-  document.getElementById('clearBtn').addEventListener('click',function(){ state.grid={}; save(); renderSched(); });
-  document.getElementById('resetBtn').addEventListener('click',function(){ state=JSON.parse(JSON.stringify(DEFAULT)); brush=null; save(); renderAll(); });
+  document.getElementById('clearBtn').addEventListener('click',function(){ state.grid={}; save(); renderSched(); showToast('课表已清空'); });
+  document.getElementById('resetBtn').addEventListener('click',function(){ state=JSON.parse(JSON.stringify(DEFAULT)); brush=null; save(); renderAll(); showToast('已恢复默认设置'); });
+
+  document.getElementById('mobileTabs').addEventListener('click',function(e){
+    var b=e.target.closest('[data-panel]'); if(!b) return;
+    document.querySelectorAll('.mobile-tabs button').forEach(function(btn){btn.classList.toggle('on',btn===b);});
+    document.querySelectorAll('.mobile-panel').forEach(function(panel){panel.classList.toggle('mobile-active',panel.id===b.dataset.panel);});
+  });
 
   renderAll();
 })();
