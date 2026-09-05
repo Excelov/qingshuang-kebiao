@@ -3,6 +3,7 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta name="author" content="轻爽课表项目组" />
 <title>轻爽课表 · 课表生成器</title>
 <style>
   :root{
@@ -151,7 +152,8 @@
   .sub-class{color:var(--brand);font-weight:600}
   .sub-term{text-align:left}
   .sub-class{text-align:right}
-  .sched-scroll{border-radius:0 0 var(--radius) var(--radius);overflow:auto;border:1px solid var(--line);border-top:none;background:var(--card);box-shadow:0 4px 18px rgba(20,30,60,.07)}
+  .sched-scroll{border-radius:0;overflow:auto;border:1px solid var(--line);border-top:none;background:var(--card);box-shadow:0 4px 18px rgba(20,30,60,.07)}
+  .schedule-copyright{padding:8px 14px 9px;background:var(--card);border-top:1px solid var(--line2);color:var(--muted);font-size:11px;text-align:right;letter-spacing:.02em}
   table.sched{width:100%;border-collapse:collapse;table-layout:fixed;min-width:640px;border:none}
   table.sched th,table.sched td{border:none;border-right:1px solid var(--line);border-bottom:1px solid var(--line);text-align:center;vertical-align:middle;transition:background .35s,color .35s,border-color .35s}
   table.sched th:last-child,table.sched td:last-child{border-right:none}
@@ -194,6 +196,7 @@
     .sched-title{font-size:26px;color:var(--text)}
     .sched-sub{font-size:15px;color:var(--muted);border-top-color:var(--line)}
     .sched-scroll{box-shadow:none}
+    .schedule-copyright{background:var(--card);-webkit-print-color-adjust:exact;print-color-adjust:exact}
     .cell.empty .ph{display:none}
     .gutter{background:var(--brand-soft) !important;-webkit-print-color-adjust:exact;print-color-adjust:exact}
     table.sched tbody tr:nth-child(odd) td:not(.gutter){background:var(--row-odd) !important;-webkit-print-color-adjust:exact;print-color-adjust:exact}
@@ -239,6 +242,7 @@
     .sched-sub{font-size:13px;margin-top:7px;padding-top:7px;gap:2px;flex-direction:column}
     .sub-class{text-align:left}
     .sched-scroll{overflow:auto}
+    .schedule-copyright{text-align:center;padding:7px 10px 9px}
     table.sched{min-width:600px}
     .defs-row{gap:7px}
     .hint{margin-top:10px}
@@ -314,6 +318,7 @@
         </div>
         <div id="schedHead"></div>
         <div class="sched-scroll"><div id="schedHost"></div></div>
+        <div class="schedule-copyright">© 2026 轻爽课表项目组 · 保留所有权利</div>
       </div>
     </main>
 

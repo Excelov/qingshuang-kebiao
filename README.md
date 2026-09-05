@@ -14,6 +14,12 @@ https://excelov.github.io/qingshuang-kebiao/
 
 页面提供班级与学期填写、课程定义、上下晚节次数调整、作息时间自动推算、课程格点选填入、配色切换、打印和导出 PDF 等功能。
 
+## 版权与使用许可
+
+Copyright (c) 2026 轻爽课表项目组. All rights reserved.
+
+本仓库公开用于项目展示、版本管理和在线访问，不代表授予复制、修改、再发布或商业使用许可。未经版权所有者书面许可，不得直接复制本项目的源代码、页面文案、视觉设计、配色方案或品牌标识。详细条款见仓库根目录的 [`LICENSE`](LICENSE) 文件。
+
 ## 主要功能
 
 - 单文件运行：全部 HTML、CSS、JavaScript 集成在 `index.html` 中。
